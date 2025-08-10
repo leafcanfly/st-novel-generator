@@ -1,0 +1,85 @@
+#novel_generator_controls {
+    border: 1px solid var(--SmartThemeBorderColor);
+    border-radius: 10px;
+    padding: 10px;
+    margin: 10px 0;
+    background: var(--SmartThemeBlurTintColor);
+}
+
+#novel_generator_controls h3 {
+    margin-top: 0;
+    color: var(--SmartThemeBodyColor);
+}
+
+#novel_settings_panel {
+    margin-top: 15px;
+    padding: 15px;
+    border: 1px solid var(--SmartThemeBorderColor);
+    border-radius: 5px;
+    background: var(--SmartThemeBlurTintColor);
+}
+
+#novel_settings_panel label {
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    color: var(--SmartThemeBodyColor);
+}
+
+#novel_settings_panel input,
+#novel_settings_panel select {
+    width: 100%;
+    padding: 5px;
+    border: 1px solid var(--SmartThemeBorderColor);
+    border-radius: 3px;
+    background: var(--SmartThemeEmphasisColor);
+    color: var(--SmartThemeBodyColor);
+}
+
+.checkbox_container {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+}
+
+.checkbox_container input[type="checkbox"] {
+    width: auto;
+    margin-right: 10px;
+}
+
+#novel_progress {
+    margin-top: 15px;
+}
+
+.progress-bar {
+    width: 100%;
+    background-color: var(--SmartThemeBlurTintColor);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+#novel_progress_fill {
+    height: 20px;
+    background: linear-gradient(90deg, #4CAF50, #45a049);
+    transition: width 0.3s ease;
+}
+
+#novel_status {
+    text-align: center;
+    color: var(--SmartThemeBodyColor);
+    font-style: italic;
+}
+
+#novel_generator_controls button {
+    margin: 5px;
+}
+
+#novel_settings_panel h4 {
+    color: var(--SmartThemeBodyColor);
+    margin-top: 0;
+}
+
+#novel_settings_panel br {
+    line-height: 1.5;
+}

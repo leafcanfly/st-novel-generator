@@ -1,0 +1,13 @@
+{
+  "display_name": "Novel Generator",
+  "loading_order": 100,
+  "requires": [],
+  "optional": [],
+  "js": "index.js",
+  "css": "style.css",
+  "author": "Your Name",
+  "version": "1.0.0",
+  "homePage": "https://github.com/leafcanfly/st-novel-generator",
+  "auto_update": true,
+  "description": "Generate novels from SillyTavern chat history using external AI APIs"
+}
