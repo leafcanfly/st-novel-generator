@@ -1,3 +1,6 @@
+import { characters, saveSettingsDebounced } from '../../../../script.js';
+import { extension_settings, getContext, onModuleReady } from '../../../extensions.js';
+
 (async function() {
     'use strict';
 
@@ -18,21 +21,18 @@
         outputFormat: 'markdown'
     };
 
-    const context = SillyTavern.getContext();
-    const { extensionSettings, saveSettingsDebounced, characters, chat } = context;
-
     function getSettings() {
-        if (!extensionSettings[MODULE_NAME]) {
-            extensionSettings[MODULE_NAME] = structuredClone(defaultSettings);
+        if (!extension_settings[MODULE_NAME]) {
+            extension_settings[MODULE_NAME] = structuredClone(defaultSettings);
         }
         
         for (const key in defaultSettings) {
-            if (extensionSettings[MODULE_NAME][key] === undefined) {
-                extensionSettings[MODULE_NAME][key] = defaultSettings[key];
+            if (extension_settings[MODULE_NAME][key] === undefined) {
+                extension_settings[MODULE_NAME][key] = defaultSettings[key];
             }
         }
         
-        return extensionSettings[MODULE_NAME];
+        return extension_settings[MODULE_NAME];
     }
 
     class ChatParser {
@@ -198,7 +198,8 @@
         }
 
         generateTitle() {
-            const currentChar = characters[context.characterId];
+            const currentContext = getContext();
+            const currentChar = characters[currentContext.characterId];
             const charName = currentChar?.name || 'Character';
             return 'A Story with ' + charName;
         }
@@ -268,7 +269,8 @@
             return;
         }
 
-        if (!chat || chat.length === 0) {
+        const currentChat = getContext().chat; // Get chat from current context
+        if (!currentChat || currentChat.length === 0) {
             toastr.error('No chat history found!');
             return;
         }
@@ -279,7 +281,7 @@
             $('#novel_status').text('Parsing chat history...');
 
             const parser = new ChatParser(settings);
-            const parsedMessages = parser.parseMessages(chat);
+            const parsedMessages = parser.parseMessages(currentChat);
             
             if (parsedMessages.length === 0) {
                 toastr.error('No valid messages found to convert!');
@@ -341,7 +343,7 @@
         $('#novel_include_ooc').prop('checked', settings.includeOOC);
     }
 
-    function init() {
+    async function init() { // Make init async
         const html = '<div id="novel_generator_controls" class="extension-settings"><h3>Novel Generator</h3><button id="generate_novel_btn" class="menu_button">Generate Novel</button><button id="novel_settings_btn" class="menu_button">Settings</button><div id="novel_progress" style="display:none;margin-top:10px;"><div style="width:100%;background:#ddd;border-radius:10px;"><div id="novel_progress_fill" style="width:0%;height:20px;background:#4CAF50;border-radius:10px;transition:width 0.3s;"></div></div><div id="novel_status" style="text-align:center;margin-top:5px;">Ready</div></div><div id="novel_settings_panel" style="display:none;margin-top:15px;padding:15px;border:1px solid #ccc;border-radius:5px;"><h4>Settings</h4><label>API Provider:</label><select id="novel_api_provider"><option value="openai">OpenAI</option><option value="anthropic">Anthropic</option></select><br><br><label>API Key:</label><input type="password" id="novel_api_key" style="width:100%;"><br><br><label>Model:</label><input type="text" id="novel_model" placeholder="gpt-4" style="width:100%;"><br><br><label>Narrative Style:</label><select id="novel_narrative_style"><option value="first_person">First Person</option><option value="third_person">Third Person</option><option value="omniscient">Omniscient</option></select><br><br><label>Messages per Chapter:</label><input type="number" id="novel_chapter_length" min="5" max="50" value="10" style="width:100%;"><br><br><label>Output Format:</label><select id="novel_output_format"><option value="markdown">Markdown</option><option value="html">HTML</option><option value="plain">Plain Text</option></select><br><br><label><input type="checkbox" id="novel_include_actions"> Include Actions</label><br><label><input type="checkbox" id="novel_include_ooc"> Include OOC</label><br><br><button id="save_novel_settings" class="menu_button">Save Settings</button></div></div>';
 
         $('#extensions_settings2').append(html);
@@ -354,10 +356,6 @@
         console.log('Novel Generator extension loaded');
     }
 
-    if (typeof SillyTavern !== 'undefined') {
-        init();
-    } else {
-        $(document).ready(init);
-    }
+    onModuleReady(init);
 
 })();
